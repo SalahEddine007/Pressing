@@ -124,6 +124,15 @@
                                                                         </div>
                                                                 </div>
                                                                 <div class="col-md-6">
+                                                                        <div class="form-group ">
+                                                                                <label class="col-lg-12 col-form-label" for="vetement_libelle">
+                                                                                        Libelle <span class="text-danger">*</span>
+                                                                                </label>
+                                                                                <div class="col-lg-12 input-group">
+                                                                                        <input type="text" class="form-control vetement_libelle" id="vetement_libelle"
+                                                                                               name="vetement_libelle[]" placeholder="">
+                                                                                </div>
+                                                                        </div>
                                                                         <div class="form-group">
                                                                                 <label class="col-lg-12 col-form-label" for="vetement_description">
                                                                                         Description <span style="font-size: 11px">(optionnel)</span>

@@ -32,12 +32,13 @@ Route::group(['middleware' => ['installation']], function () {
     Route::resource('/categories','CategorieController');
     Route::resource('/services','ServiceController');
     Route::resource('/clients','ClientController');
+    Route::resource('/chiffre','ChiffreController');
 
     Route::get('/all-commandes','FactureController@allCommandes');
 
     Route::resource('/impression','ImpressionController');
-    Route::get('/impression/ticket/{id}','ImpressionController@ticket');
-    Route::get('/impression/facture/{id}','ImpressionController@facture');
+    Route::get('/impression/ticket/{id}','ImpressionController@ticketPDF');
+    Route::get('/impression/facture/{id}','ImpressionController@facturePDF');
     Route::get('/impression/codebar/{id}','ImpressionController@codebar');
 
     Route::get('/home', 'HomeController@index')->name('home');

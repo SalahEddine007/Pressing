@@ -9,6 +9,7 @@
         th{
             font-size: 10px;
         }
+
         .btn-edit{
             color: #fff;
             background-color: #00acfc;
@@ -57,6 +58,12 @@
         }
         .optionnel{
             font-size: 11px;
+        }
+        .nav-tabs-block{
+            background-color: #C5C5C5;
+        }
+        .form-control, .input-group-addon{
+            height: auto;
         }
     </style>
     {{--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>--}}
@@ -177,13 +184,13 @@
                                                             <div class="row">
                                                                 <div class="col-md-6">
                                                                     <label class="css-control css-control-primary css-radio">
-                                                                        <input class="css-control-input" name="user_permission" value="oui" type="radio">
+                                                                        <input class="css-control-input" name="user_permission" value="1" type="radio">
                                                                         <span class="css-control-indicator"></span> Yes
                                                                     </label>
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <label class="css-control css-control-primary css-radio">
-                                                                        <input class="css-control-input" name="user_permission" value="no" checked="" type="radio">
+                                                                        <input class="css-control-input" name="user_permission" value="0" checked="" type="radio">
                                                                         <span class="css-control-indicator"></span> No
                                                                     </label>
                                                                 </div>
@@ -252,20 +259,179 @@
                         <td class="font-w400">{{$user->username}}</td>
                         <td class="font-w400">{{$user->email}}</td>
                         <td class="font-w400">*******</td>
-                        <td class="text-center">
+                        <td class="">
                             <div class="btn-group">
-                                <a href="/users/{{$user->id}}">
-                                    <button type="button" class="btn btn-sm btn-edit" data-toggle="tooltip" title="Edit">
-                                        <i class="fa fa-pencil"></i>
-                                    </button>
-                                </a>
-                                <form action="/users/{{$user->id}}" method="post">
-                                    {{ method_field('DELETE') }}
-                                    {{csrf_field()}}
-                                    <button type="submit" class="btn btn-sm btn-delete" data-toggle="tooltip" title="Delete">
-                                        <i class="fa fa-times"></i>
-                                    </button>
-                                </form>
+
+                                <button type="button" class="btn btn-sm btn-edit" data-toggle="modal" data-target="#{{$user->id}}" title="autorisation">
+                                    <i class="fa fa-pencil"></i>
+                                </button>
+
+
+                                <button type="button" class="btn btn-sm btn-delete" data-toggle="modal" data-target="#{{$user->tele}}" title="Delete">
+                                    <i class="fa fa-times"></i>
+                                </button>
+
+                                <div class="modal fade" id="{{$user->tele}}" tabindex="-1" role="dialog" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg modal-dialog-fromright" role="document">
+                                        <div class="modal-content">
+                                            <div class="block-header bg-primary-dark">
+                                                <h5 class="block-title">Deleted user</h5>
+                                                <div class="block-options">
+                                                    <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
+                                                        <i class="si si-close"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Do you want to delete this user ?</p>
+                                            </div>
+                                            <div class="modal-footer">
+
+                                                <form action="/users/{{$user->id}}" method="post">
+                                                    {{ method_field('DELETE') }}
+                                                    {{csrf_field()}}
+                                                    <button type="submit" class="btn btn-sm btn-delete">
+                                                        Yes
+                                                    </button>
+                                                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                                                </form>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            <!--authorisation in modale-->
+                            <div id="{{$user->id}}" class="modal fade" tabindex="-1" role="dialog">
+                                <div class="modal-dialog modal-lg modal-dialog-fromright" role="document">
+                                    <div class="modal-content">
+                                        <div class="block-header bg-primary-dark">
+                                            <h4 class="block-title">Update {{$user->fullname}}</h4>
+                                            <div class="block-options">
+                                                <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
+                                                    <i class="si si-close"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="{{route('users.update','test')}}" method="post">
+                                                {{ method_field('patch') }}
+                                                {{ csrf_field() }}
+                                            <div class="block">
+                                                <ul class="nav nav-tabs nav-tabs-block js-tabs-enabled" data-toggle="tabs" role="tablist">
+                                                    <li class="nav-item active show">
+                                                        <a data-toggle="tab" class="nav-link" href="#{{$user->id}}Générale">Générale</a>
+                                                    </li>
+                                                    @if($user->is_admin==0)
+                                                    <li class="nav-item">
+                                                        <a data-toggle="tab" class="nav-link" href="#{{$user->id}}Permission">Permission</a>
+                                                    </li>
+                                                    @endif
+                                                </ul>
+                                                <div class="block-content tab-content">
+                                                    <div class="tab-pane active show" id="{{$user->id}}Générale" role="tabpanel">
+
+                                                        <input type="hidden" id="iduser" name="iduser" value="{{$user->id}}">
+                                                        <div class="form-group">
+                                                            <label for="name" class="label-control col-md-4">name</label>
+                                                            <div class="col-md-8">
+                                                                <input type="text" id="name" name="name" class="form-control" value="{{$user->fullname}}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="adresse" class="label-control col-md-4">adresse</label>
+                                                            <div class="col-md-8">
+                                                                <input type="text" id="adresse" name="adresse" class="form-control" value="{{$user->adresse}}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="tel" class="label-control col-md-4">telephone</label>
+                                                            <div class="col-md-8">
+                                                                <input type="text" id="tel" name="tel" class="form-control" value="{{$user->tele}}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="username" class="label-control col-md-4">username</label>
+                                                            <div class="col-md-8">
+                                                                <input type="text" id="username" name="username" class="form-control" value="{{$user->username}}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="email" class="label-control col-md-4">email</label>
+                                                            <div class="col-md-8">
+                                                                <input type="text" id="email" name="email" class="form-control" value="{{$user->email}}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="password" class="label-control col-md-4">New password</label>
+                                                            <div class="col-md-8">
+                                                                <input type="text" id="password" name="password" class="form-control">
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="tab-pane" id="{{$user->id}}Permission" role="tabpanel">
+
+                                                        <div class="row">
+                                                        <div class="col-md-5">
+                                                            <h5>Client</h5>
+                                                            <label class="css-control css-control-primary css-checkbox">
+                                                                <input type="checkbox" name="showcl" class="css-control-input" @if($user->show_client==1){ checked="" }@endif value="{{$user->show_client}}">
+                                                                <span class="css-control-indicator"></span> show
+                                                            </label>
+
+                                                            <label class="css-control css-control-primary css-checkbox">
+                                                                <input type="checkbox" name="createcl" class="css-control-input" @if($user->create_client==1){ checked="" }@endif value="{{$user->create_client}}">
+                                                                <span class="css-control-indicator"></span> create
+                                                            </label>
+
+                                                            <label class="css-control css-control-primary css-checkbox">
+                                                                <input type="checkbox" name="updatecl" class="css-control-input" @if($user->update_client==1){ checked="" }@endif value="{{$user->update_client}}">
+                                                                <span class="css-control-indicator"></span> update
+                                                            </label>
+
+                                                            <label class="css-control css-control-primary css-checkbox">
+                                                                <input type="checkbox" name="deletecl" class="css-control-input" @if($user->delete_client==1){ checked="" }@endif value="{{$user->delete_client}}">
+                                                                <span class="css-control-indicator"></span> delete
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="col-md-5">
+                                                            <h5>Commande</h5>
+                                                            <label class="css-control css-control-primary css-checkbox">
+                                                                <input type="checkbox" name="showcm" class="css-control-input" @if($user->show_commande==1){ checked="" }@endif value="{{$user->show_commande}}">
+                                                                <span class="css-control-indicator"></span> show
+                                                            </label>
+
+                                                            <label class="css-control css-control-primary css-checkbox">
+                                                                <input type="checkbox" name="createcm" class="css-control-input" @if($user->create_commande==1){ checked="" }@endif value="{{$user->create_commande}}">
+                                                                <span class="css-control-indicator"></span> create
+                                                            </label>
+
+                                                            <label class="css-control css-control-primary css-checkbox">
+                                                                <input type="checkbox" name="updatecm" class="css-control-input" @if($user->update_commande==1){ checked="" }@endif value="{{$user->update_commande}}">
+                                                                <span class="css-control-indicator"></span> update
+                                                            </label>
+
+                                                            <label class="css-control css-control-primary css-checkbox">
+                                                                <input type="checkbox" name="deletecm" class="css-control-input" @if($user->delete_commande==1){ checked="" }@endif value="{{$user->delete_commande}}">
+                                                                <span class="css-control-indicator"></span> delete
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn btn-sm btn-primary">Update</button>
+                                                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div><!-- /.modal-content -->
+                                </div><!-- /.modal-dialog -->
+                            </div><!-- /.modal -->
                             </div>
                         </td>
                     </tr>

@@ -30,15 +30,27 @@
                                 Total de Pieces : {{$facture->commande_quantity}} Pieces
                             </div>
                             <div class="text-center">
+                                <a href="{{ url('/impression/ticket/'.$facture->id_commande) }}" class='btnprint'>
                                 <button type="button" class="btn btn-alt-info mr-5 mb-5">
                                     Imprimer le Ticket <i class="fa fa-print"></i>
                                 </button>
+                                </a>
+                                <a href="{{ url('/impression/codebar/'.$facture->id_commande) }}" class='btnprint'>
                                 <button type="button" class="btn btn-alt-info mr-5 mb-5">
                                     Imprimer le Code Bar <i class="fa fa-barcode"></i>
                                 </button>
+                                </a>
+                                <a href="{{ url('/impression/facture/'.$facture->id_commande) }}" class='btnprint'>
                                 <button type="button" class="btn btn-alt-info mr-5 mb-5">
                                     Imprimer la Facture <i class="fa fa-print"></i>
                                 </button>
+                                </a>
+
+                                <script type="text/javascript">
+                                    $(document).ready(function () {
+                                        $('.btnprint').printPage();
+                                    });
+                                </script>
                             </div>
                         </div>
                         <div class="container">
@@ -67,6 +79,7 @@
     <script src="{{asset('assets/js/plugins/select2/select2.full.min.js')}}"></script>
     <script src="{{asset('assets/js/plugins/jquery-validation/jquery.validate.min.js')}}"></script>
     <script src="{{asset('assets/js/plugins/jquery-validation/additional-methods.min.js')}}"></script>
+    <script src="http://www.position-absolute.com/creation/print/jquery.printPage.js"></script>
 @endsection
 
 

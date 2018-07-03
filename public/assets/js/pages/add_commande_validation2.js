@@ -3,6 +3,7 @@ $(function () {
     $("#add").click(function() {
         $('#vetements #vetement:last').clone(true).insertBefore('#add_button');
         $('#vetements #vetement').last().find('input:text').val('');
+        $('#vetements #vetement').last().find('#vetement_libelle').val('');
         $('#vetements #vetement').last().find('#vetement_description').val('');
         $('#vetements #vetement').last().find('#vetement_quantity').val('1');
         return false;

@@ -28,7 +28,7 @@ class CommandeController extends Controller
         $services = DB::table('services')->get();
         $categories = DB::table('categories')->get();
         $clients = DB::table('clients')->get();
-
+        $this->authorize('view', 'App\Commande');
         return view('Pages.Commande.add', [
             'services' => $services,
             'categories' => $categories,
@@ -58,6 +58,7 @@ class CommandeController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', 'App\Commande');
         if ($request->check_client=='old'){
             $client = DB::table('clients')->where('id_client',$request->client)->first();
         }else{
@@ -112,6 +113,7 @@ class CommandeController extends Controller
             $vetement->id_service=$service[$i];
             $vetement->id_commande=$commande->id_commande;
 //          $vetement->vetement_color=$color[$i];
+            $vetement->vetement_libelle =$libelle[$i];
             $vetement->vetement_price=$price[$i];
             $vetement->vetement_quantity=$quantity[$i];
             $vetement->vetement_total=$total[$i];

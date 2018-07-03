@@ -62,19 +62,99 @@
                     </td>
                     <td class="text-center">
                         <div class="btn-group">
-                            <form action="/factures/{{$facture->id_commande}}" method="post">
-                                {{ method_field('DELETE') }}
-                                {{csrf_field()}}
-                                <button type="submit" class="btn btn-alt-danger mr-5 mb-5">
-                                    <i class="fa fa-times mr-5"></i>Delete
-                                </button>
-                            </form>
-                            <a href="/impression/{{$facture->id_commande}}">
-
-                                <button type="button" class="btn btn-alt-info mr-5 mb-5">
+                            @can('delete', 'App\Commande')
+                            <button type="button" class="btn btn-alt-danger mr-5 mb-5" data-toggle="modal" data-target="#{{$facture->id_commande}}" title="Delete">
+                                <i class="fa fa-times"></i>Delete
+                            </button>
+                            @endcan
+                            <button type="button" class="btn btn-alt-info mr-5 mb-5" data-toggle="modal" data-target="#{{$facture->commande_num}}" title="Impression">
                                     <i class="fa fa-upload mr-5"></i>Impression
-                                </button>
-                            </a>
+                            </button>
+
+
+                            <!--impression in modale-->
+                            <div id="{{$facture->commande_num}}" class="modal fade" tabindex="-1" role="dialog">
+                                <div class="modal-dialog modal-lg modal-dialog-fromright" role="document">
+                                    <div class="modal-content">
+                                        <div class="block-header bg-primary-dark">
+                                            <h4 class="block-title">La Commande: {{$facture->commande_num}}</h4>
+                                            <div class="block-options">
+                                                <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
+                                                    <i class="si si-close"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="modal-body">
+
+                                                    <div class="text-center">
+                                                        Nom Client : {{$facture->client_name}}
+                                                        <br>
+                                                        Montant Total : {{$facture->commande_montant}}DH (TTC)
+                                                        <br>
+                                                        Total de Pieces : {{$facture->commande_quantity}} Pieces
+                                                    </div>
+                                                        <br>
+                                                    <div class="text-center">
+                                                        <a href="{{ url('/impression/ticket/'.$facture->id_commande) }}" class='btnprint'>
+                                                            <button type="button" class="btn btn-alt-info mr-5 mb-5">
+                                                                Imprimer le Ticket <i class="fa fa-print"></i>
+                                                            </button>
+                                                        </a>
+                                                        <a href="{{ url('/impression/codebar/'.$facture->id_commande) }}" class='btnprint'>
+                                                            <button type="button" class="btn btn-alt-info mr-5 mb-5">
+                                                                Imprimer le Code Bar <i class="fa fa-barcode"></i>
+                                                            </button>
+                                                        </a>
+                                                        <a href="{{ url('/impression/facture/'.$facture->id_commande) }}" class='btnprint'>
+                                                            <button type="button" class="btn btn-alt-info mr-5 mb-5">
+                                                                Imprimer la Facture <i class="fa fa-print"></i>
+                                                            </button>
+                                                        </a>
+
+                                                        <script type="text/javascript">
+                                                            $(document).ready(function () {
+                                                                $('.btnprint').printPage();
+                                                            });
+                                                        </script>
+                                                    </div>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div><!-- /.modal-content -->
+                                </div><!-- /.modal-dialog -->
+                            </div><!-- /.modal -->
+
+
+                            <!--delete commande-->
+                            <div class="modal fade" id="{{$facture->id_commande}}" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-fromright" role="document">
+                                    <div class="modal-content">
+                                        <div class="block-header bg-primary-dark">
+                                            <h5 class="block-title">Deleted Client</h5>
+                                            <div class="block-options">
+                                                <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
+                                                    <i class="si si-close"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Do you want to delete this Commandes ?</p>
+                                        </div>
+                                        <div class="modal-footer">
+
+                                            <form action="/factures/{{$facture->id_commande}}" method="post">
+                                                {{ method_field('DELETE') }}
+                                                {{csrf_field()}}
+                                                <button type="submit" class="btn btn-alt-danger">Yes</button>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
 
                         </div>
@@ -101,6 +181,7 @@
 
     <!-- Page JS Code -->
     <script src="{{('assets/js/pages/be_tables_datatables.js')}}"></script>
+    <script src="http://www.position-absolute.com/creation/print/jquery.printPage.js"></script>
 
 @endsection
 

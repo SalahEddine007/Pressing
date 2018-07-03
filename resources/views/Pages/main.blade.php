@@ -69,6 +69,7 @@
                     {{--<div class="row gutters-tiny invisible" data-toggle="appear">--}}
                         <!-- Row #1 -->
                         <div class="row">
+                            @can('create', 'App\Commande')
                             <div class="col-6 col-md-4 col-xl-2">
                                 <a class="block block-transparent ribbon ribbon-bookmark ribbon-crystal ribbon-left text-center bg-primary" href="/commandes">
                                     <div class="block-content bg-black-op-5">
@@ -81,6 +82,8 @@
                                     </div>
                                 </a>
                             </div>
+                            @endcan
+                            @can('view', 'App\Commande')
                             <div class="col-6 col-md-4 col-xl-2">
                                 <a class="block block-transparent ribbon ribbon-bookmark ribbon-crystal ribbon-left text-center bg-success" href="/factures">
                                     <div class="ribbon-box">{{$nbr_factures}}</div>
@@ -94,6 +97,7 @@
                                     </div>
                                 </a>
                             </div>
+                            @endcan
                             <div class="col-6 col-md-4 col-xl-2">
                                 <a class="block block-transparent ribbon ribbon-bookmark ribbon-crystal ribbon-left text-center bg-gd-sun" href="/services">
                                     <div class="ribbon-box">{{$nbr_factures}}</div>
@@ -120,6 +124,7 @@
                                     </div>
                                 </a>
                             </div>
+                            @can('view', 'App\Client')
                             <div class="col-6 col-md-4 col-xl-2">
                                 <a class="block block-transparent ribbon ribbon-bookmark ribbon-crystal ribbon-left text-center bg-flat" href="/clients">
                                     <div class="ribbon-box">{{$nbr_factures}}</div>
@@ -133,6 +138,8 @@
                                     </div>
                                 </a>
                             </div>
+                            @endcan
+                            @can('view', 'App\User')
                             <div class="col-6 col-md-4 col-xl-2">
                                 <a class="block block-transparent ribbon ribbon-bookmark ribbon-crystal ribbon-left text-center bg-elegance" href="/users">
                                     <div class="ribbon-box">{{$nbr_factures}}</div>
@@ -146,7 +153,22 @@
                                     </div>
                                 </a>
                             </div>
-
+                            @endcan
+                            @can('view', 'App\User')
+                            <div class="col-6 col-md-4 col-xl-2">
+                                <a class="block block-transparent ribbon ribbon-bookmark ribbon-crystal ribbon-left text-center bg-elegance" href="/Chiffre">
+                                    <div class="ribbon-box">{{$nbr_factures}}</div>
+                                    <div class="block-content bg-black-op-5">
+                                        <p class="font-w600 text-white">Chiffre d'affaire</p>
+                                    </div>
+                                    <div class="block-content">
+                                        <p>
+                                            <i class="si si-users fa-2x text-white-op"></i>
+                                        </p>
+                                    </div>
+                                </a>
+                            </div>
+                            @endcan
                         </div>
                     @yield('content')
                 </div>

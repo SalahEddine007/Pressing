@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Permission;
 use Illuminate\Http\Request;
 use Response;
 use Illuminate\Support\Facades\DB;
@@ -25,7 +26,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = DB::table('users')->get();
+        $users = DB::table('users')->join('permissions', 'users.id', '=', 'permissions.id_user')->get();
+        $this->authorize('view', 'App\User');
         return view('Pages.User.show', ['users' => $users]);
     }
 
@@ -74,8 +76,12 @@ class UserController extends Controller
 
         $user->picture=$picture_local;
         $user->password=bcrypt($request->user_password);
-        $user->admin=$request->user_permission;
+        $user->is_admin=$request->user_permission;
         $user->save();
+
+            $permission = new Permission();
+            $permission->id_user=$user->id;
+            $permission->save();
 
 
         return redirect('/users');
@@ -112,12 +118,36 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-//        DB::table('users')
-//            ->where('id', $id)
-//            ->update(['' =>$request->fullname ]);
-//
-//
-//        return redirect('/services');
+        DB::table('permissions')
+        ->where('id_user', $request->iduser)
+        ->update(
+            [
+                'show_client' =>$request->has('showcl'),
+                'create_client' =>$request->has('createcl'),
+                'update_client' =>$request->has('updatecl'),
+                'delete_client' =>$request->has('deletecl'),
+
+                'show_commande' =>$request->has('showcm'),
+                'create_commande' =>$request->has('createcm'),
+                'update_commande' =>$request->has('updatecm'),
+                'delete_commande' =>$request->has('deletecm'),
+            ]);
+
+        DB::table('users')
+            ->where('id', $request->iduser)
+            ->update(
+                [
+                    'username' =>$request->username,
+                    'email' =>$request->email,
+                    'fullname' =>$request->name,
+                    'adresse' =>$request->adresse,
+                    'tele' =>$request->telephone,
+
+
+
+                ]);
+
+        return redirect('/users');
     }
 
     /**
@@ -128,7 +158,7 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        DB::table('users')->where('id', '=', $id)->delete();
+        DB::table('users')->join('permissions', 'users.id', '=', 'permissions.id_user')->where('id', '=', $id)->delete();
         return redirect('/users');
     }
 

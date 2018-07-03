@@ -21,7 +21,9 @@ class ClientController extends Controller
      */
     public function index()
     {
-        $clients = DB::table('clients')->get();
+
+        $clients = Client::all();
+        $this->authorize('view', 'App\Client');
         return view('Pages.Client.show', ['clients' => $clients]);
     }
 
@@ -32,7 +34,7 @@ class ClientController extends Controller
      */
     public function create()
     {
-        return view('Pages.Client.clients');
+        return view('Pages.Client.show');
     }
 
     /**
@@ -44,10 +46,12 @@ class ClientController extends Controller
     public function store(Request $request)
     {
         $client = new Client();
-        $client->nom=$request->nom;
-        $client->tele=$request->tele;
-        $client->adresse=$request->adresse;
+        $client->client_name=$request->name;
+        $client->client_tele=$request->tel;
+        $client->client_adresse=$request->adresse;
+        $this->authorize('create', 'App\Client');
         $client->save();
+        return redirect('clients');
     }
 
     /**
@@ -70,8 +74,8 @@ class ClientController extends Controller
      */
     public function edit($id)
     {
-        $client = DB::table('clients')->where('id_client', $id)->first();
-        return view('Pages.Client.edit', ['client' => $client]);
+//        $client = DB::table('clients')->where('id_client', $id)->first();
+//        return view('Pages.Client.edit', ['client' => $client]);
     }
 
     /**
@@ -81,15 +85,17 @@ class ClientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
+        $client = Client::find($request->idcl);
+        $this->authorize('update', $client);
         DB::table('clients')
-            ->where('id_client', $id)
+            ->where('id_client', $request->idcl)
             ->update(
                 [
-                    'nom' =>$request->nom,
-                    'tel' =>$request->tel,
-                    'adresse' =>$request->adresse
+                    'client_name' =>$request->name,
+                    'client_tele' =>$request->tel,
+                    'client_adresse' =>$request->adresse
                 ]);
 
 
@@ -104,7 +110,12 @@ class ClientController extends Controller
      */
     public function destroy($id)
     {
-        DB::table('clients')->where('id_client', '=', $id)->delete();
+        //$test = DB::table('permissions')->get()->first();
+        //$test = Permission::get();
+        $client = Client::find($id);
+        //$client = DB::table('clients')->where('id_client', '=', $id);
+        $this->authorize('delete', $client);
+        $client->delete();
         return redirect('/clients');
     }
 

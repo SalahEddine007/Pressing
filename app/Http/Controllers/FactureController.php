@@ -30,7 +30,7 @@ class FactureController extends Controller
 
         $factures = DB::table('factures')->whereNull('deleted_at')->get();
 
-
+        $this->authorize('view', 'App\Commande');
         return view('Pages.Facture.show', [
             'factures' => $factures,
 
@@ -112,7 +112,9 @@ class FactureController extends Controller
      */
     public function destroy($id)
     {
-        Commande::destroy($id);
+        $commande = Commande::find($id);
+        $this->authorize('delete', 'App\Commande');
+        $commande->delete();
         return redirect('/factures');
     }
 

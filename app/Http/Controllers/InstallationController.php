@@ -57,7 +57,7 @@ class InstallationController extends Controller
 
         $user->picture=$picture_local;
         $user->password=bcrypt($request->password);
-        $user->admin='oui';
+        $user->is_admin=1;
 
         $societe->societe_name=$request->societe_name;
         $societe->societe_adresse=$request->societe_adresse;
